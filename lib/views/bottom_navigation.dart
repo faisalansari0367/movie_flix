@@ -20,10 +20,8 @@ class BottomNavbarWidget extends StatelessWidget {
         type: BottomNavigationBarType.fixed,
         onTap: controller.updateTab,
         unselectedIconTheme: theme.iconTheme,
-        // selectedLabelStyle: const TextStyle(color: Colors.black),
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        // selectedLabelStyle: theme.textTheme.subtitle1,
         selectedIconTheme: theme.iconTheme,
         currentIndex: controller.tabIndex,
         items: controller.items

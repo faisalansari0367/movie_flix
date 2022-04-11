@@ -6,20 +6,23 @@ import 'package:movie_flix/services/http_service.dart';
 class TopRatedController extends GetxController {
   final _movies = <MovieModel>[].obs;
   // ignore: invalid_use_of_protected_member
-  List<MovieModel> get movies => _movies.value;
   final _controller = TextEditingController().obs;
   get controller => _controller.value;
   final _query = ''.obs;
-  var _moviesData = <MovieModel>[];
+  final _filteredList = <MovieModel>[];
 
   final _isLoading = false.obs;
+
   bool get isLoading => _isLoading.value;
+  String get query => _query.value;
+
+  
+  // ignore: invalid_use_of_protected_member
+  List<MovieModel> get movies => query.isNotEmpty ? _filteredList : _movies.value;
 
   void _setLoading(bool value) {
     _isLoading.value = value;
   }
-
-  String get query => _query.value;
 
   @override
   void onInit() {
@@ -33,18 +36,17 @@ class TopRatedController extends GetxController {
     super.dispose();
   }
 
-  void removeItem(int index) {
-    _movies.removeAt(index);
+  void removeItem(String id) {
+    _movies.removeWhere((element) => element.id == id);
+    onChanged(query);
   }
 
   void onChanged(String q) {
     _query.value = q;
-    final fileteredMOvies = movies.where((element) => element.title.toLowerCase().contains(q)).toList();
-    if (q.isNotEmpty) {
-      _movies.value = fileteredMOvies.toList();
-    } else {
-      _movies.value = _moviesData;
-    }
+    // ignore: invalid_use_of_protected_member
+    final fileteredMovies = _movies.value.where((element) => element.title.toLowerCase().contains(q.toLowerCase())).toList();
+    _filteredList.clear();
+    _filteredList.addAll(fileteredMovies);
   }
 
   void clearQuery() {
@@ -56,8 +58,8 @@ class TopRatedController extends GetxController {
     try {
       _setLoading(true);
       final result = await HttpService.topRated();
-      _moviesData = result.movies;
-      _movies.value = _moviesData;
+      // _moviesData = result.movies;
+      _movies.value = result.movies;
       _setLoading(false);
     } on Exception catch (_) {
       _setLoading(false);

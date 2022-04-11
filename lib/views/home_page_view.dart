@@ -11,12 +11,10 @@ class HomePageView extends GetView<NavbarController> {
     return Scaffold(
       body: SafeArea(
         child: Obx(
-          () {
-            return IndexedStack(
-              index: controller.tabIndex,
-              children: controller.items.map((e) => e.page).toList(),
-            );
-          },
+          () => IndexedStack(
+            index: controller.tabIndex,
+            children: controller.items.map((e) => e.page).toList(),
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavbarWidget(controller: controller),

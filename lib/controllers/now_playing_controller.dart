@@ -8,10 +8,10 @@ class NowPlayingController extends GetxController {
   final _movies = <MovieModel>[].obs;
   final _controller = TextEditingController().obs;
   final _query = ''.obs;
-  var _moviesData = <MovieModel>[];
+  final _filteredList = <MovieModel>[];
 
   // ignore: invalid_use_of_protected_member
-  List<MovieModel> get movies => _movies.value;
+  List<MovieModel> get movies => query.isNotEmpty ? _filteredList : _movies.value;
 
   TextEditingController get controller => _controller.value;
   String get query => _query.value;
@@ -23,8 +23,9 @@ class NowPlayingController extends GetxController {
     _isLoading.value = value;
   }
 
-  void removeItem(int index) {
-    _movies.removeAt(index);
+  void removeItem(String id) {
+    _movies.removeWhere((element) => element.id == id);
+    onChanged(query);
   }
 
   @override
@@ -33,32 +34,32 @@ class NowPlayingController extends GetxController {
     super.onInit();
   }
 
-  // @override
-  // void dispose() {
-  //   // controller.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   void onChanged(String q) {
     _query.value = q;
-    final fileteredMOvies = movies.where((element) => element.title.toLowerCase().contains(q)).toList();
-    if (q.isNotEmpty) {
-      _movies.value = fileteredMOvies.toList();
-    } else {
-      _movies.value = _moviesData;
-    }
+    // ignore: invalid_use_of_protected_member
+    final fileteredMovies =
+        _movies.value.where((element) => element.title.toLowerCase().contains(q.toLowerCase())).toList();
+    _filteredList.clear();
+    _filteredList.addAll(fileteredMovies);
   }
 
   void clearQuery() {
     _query.value = '';
     _controller.value.clear();
+    // _movies.value = _moviesData;
   }
 
   Future<void> _fetchTopRatedMovies() async {
     try {
       _setLoading(true);
       final result = await HttpService.nowPlaying();
-      _moviesData = result.movies;
+      final _moviesData = result.movies;
       _movies.value = _moviesData;
       _setLoading(false);
     } catch (e) {

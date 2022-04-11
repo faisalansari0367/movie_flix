@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:movie_flix/constants.dart';
@@ -8,7 +9,7 @@ import '../models/movie_model.dart';
 
 class MovieListBuilder extends StatelessWidget {
   final List<MovieModel> movies;
-  final void Function(int)? itemRemover;
+  final void Function(String)? itemRemover;
   const MovieListBuilder({
     Key? key,
     required this.movies,
@@ -18,6 +19,7 @@ class MovieListBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      dragStartBehavior: DragStartBehavior.start,
       itemCount: movies.length,
       itemBuilder: itemBuilder,
     );
@@ -28,7 +30,7 @@ class MovieListBuilder extends StatelessWidget {
     return Dismissible(
       key: Key(item.id),
       movementDuration: kDuration,
-      onDismissed: (_) => itemRemover != null ? itemRemover!(index) : null,
+      onDismissed: (_) => itemRemover != null ? itemRemover!(item.id) : null,
       child: HorizontalMovieCard(
         poster: item.poster,
         name: item.title,

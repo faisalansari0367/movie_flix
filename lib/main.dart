@@ -16,14 +16,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
-      // theme:  ThemeData(primarySwatch: Colors.blue),
+      title: 'Movie flix',
       theme: Get.isDarkMode ? themeData() : darkThemeData(),
       debugShowCheckedModeBanner: false,
       getPages: AppPage.routes,
       initialRoute: AppRoute.home,
-      initialBinding: HomePageBinding(),
-      home: const HomePageView(),
     );
   }
 }
