@@ -15,8 +15,6 @@ class MovieDetailsView extends StatefulWidget {
 }
 
 class _MovieDetailsViewState extends State<MovieDetailsView> {
-  final controller = DraggableScrollableController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +44,6 @@ class _MovieDetailsViewState extends State<MovieDetailsView> {
             DraggableScrollableSheet(
               builder: builder,
               initialChildSize: 0.3,
-              controller: controller,
               maxChildSize: 0.6,
               minChildSize: 0.2,
             ),
